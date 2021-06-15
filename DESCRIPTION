@@ -1,0 +1,20 @@
+Package: tidygrf
+Title: Tidy models for generalized random forests
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "James",
+           family = "Archsmith",
+           role = c("aut", "cre"),
+           email = "archsmith@econjim.com",
+           comment = c(ORCID = "0000-0002-6052-0302"))
+Description: Impliments tidymodels/parsnip interfaces for grf
+License: Apache 2.0
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Imports:
+  grf (>= 1.0.0),
+  parsnip,
+  tibble,
+  ellipsis
