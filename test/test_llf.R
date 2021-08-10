@@ -1,9 +1,14 @@
-library(dplyr)
-library(stringr)
+
+## Remember on updates to run the following:
+if(FALSE) {
+  devtools::document()
+  devtools::install("C:/Users/archs/Documents/GitHub/R/packages/tidygrf")
+}
+
+
+library(tidyverse)
 library(tidymodels)
 library(tidygrf)
-tidymodels_prefer()
-#library(tidyverse)
 
 N = 1000
 full.data <- tibble(e=rnorm(N,0,1))
@@ -28,7 +33,7 @@ grf_llf(mode="regression",trees=100) %>%
   fit(formula.rf,data=full.data) -> llf.fit
 
 llf.fit %>%
-  predict(new_data=full.data) %>%
+  predict(new_data=full.data,type="numeric") %>%
   rename(yhat = 1) %>%
   bind_cols(full.data) -> full.data
 

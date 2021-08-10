@@ -102,7 +102,7 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
 
   #Train the model
   grf::ll_regression_forest(
-    x,y,sample.weights=w,
+    x,y,
     num.trees = trees,
     min.node.size=min_n
   )->trained.model
@@ -138,6 +138,21 @@ make_grf_llf <- function() {
     eng = "grf"
   )
   parsnip::set_dependency("grf_llf", eng = "grf", pkg = "grf")
+
+  #############################
+  ## Define Encoding
+  #############################
+  parsnip::set_encoding(
+    model = "grf_llf",
+    eng = "grf",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "one_hot",
+      compute_intercept = FALSE,
+      remove_intercept = TRUE,
+      allow_sparse_x = FALSE
+    )
+  )
 
   #############################
   ##  Set arguments
@@ -190,49 +205,49 @@ make_grf_llf <- function() {
   )
 
 
-  ####################################
-  ## Prediction function
-  ####################################
-  grf_llf_pred_info <- list(
-    #Pre-processing command
-    #As far as I can tell, the return value from this function
-    #is passed as new_data to the predict function below
-    pre = function(new_data,fitobject) {
-      #I want to pass NAs to the design matrix here
-      #First I extract the current system NA action
-      na_action <- options('na.action')
-      #Change the action to na.pass
-      options(na.action='na.pass')
-      #create the design matrix
-      x <- model.matrix(as.formula(fitobject$fit$model.params$formula),new_data)
-      #Resent the system NA action
-      options(na.action=na_action$na.action)
 
-      return(x)
-    },
-    #Post-processing command
-    #This takes the predict object and the modeling object as arguments
-    #And then the parsnip prediction routine passes what this function returns
-    #Here I just want one component of the prediction
-    post = function(x,object) {
-      return(tibble::tibble(x[1]))
-    },
-    func = c(fun="predict"), #Reference to the predict method
-    args = list(
-      #<user argument name> = <value passed to func>
-      #Quoting means the argument will be evaluated at runtime
-      object = quote(object$fit$trained.model),
-      newdata = quote(new_data),
-      type = "numeric"
-    )
-  )
 
   parsnip::set_pred(
     model = "grf_llf",
     eng = "grf",
     mode = "regression",
     type = "numeric",
-    value = grf_llf_pred_info
+    ####################################
+    ## Prediction function
+    ####################################
+    value = list(
+      #Pre-processing command
+      #As far as I can tell, the return value from this function
+      #is passed as new_data to the predict function below
+      pre = function(x,fitobject) {
+        #I want to pass NAs to the design matrix here
+        #First I extract the current system NA action
+        na_action <- options('na.action')
+        #Change the action to na.pass
+        options(na.action='na.pass')
+        #create the design matrix
+        x <- model.matrix(as.formula(fitobject$fit$model.params$formula),x)
+        #Resent the system NA action
+        options(na.action=na_action$na.action)
+
+        return(x)
+      },
+      #Post-processing command
+      #This takes the predict object and the modeling object as arguments
+      #And then the parsnip prediction routine passes what this function returns
+      #Here I just want one component of the prediction
+      post = function(x,object) {
+        return(tibble::tibble(x[1]))
+      },
+      func = c(fun="predict"), #Reference to the predict method
+      args = list(
+        #<user argument name> = <value passed to func>
+        #Quoting means the argument will be evaluated at runtime
+        #object = quote(object$fit$trained.model),
+        object = quote(object$fit$trained.model),
+        newdata = quote(new_data)
+      )
+    )
   )
 }
 

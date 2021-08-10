@@ -157,6 +157,21 @@ make_grf_rf <- function() {
   parsnip::set_dependency("grf_rf", eng = "grf", pkg = "grf")
 
   #############################
+  ## Define Encoding
+  #############################
+  parsnip::set_encoding(
+    model = "grf_rf",
+    eng = "grf",
+    mode = "regression",
+    options = list(
+      predictor_indicators = "one_hot",
+      compute_intercept = FALSE,
+      remove_intercept = TRUE,
+      allow_sparse_x = FALSE
+    )
+  )
+
+  #############################
   ##  Set arguments
   #############################
   parsnip::set_model_arg(
@@ -207,61 +222,46 @@ make_grf_rf <- function() {
   )
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  ####################################
-  ## Prediction function
-  ####################################
-  grf_rf_pred_info <- list(
-    #Pre-processing command
-    #As far as I can tell, the return value from this function
-    #is passed as new_data to the predict function below
-    pre = function(new_data,fitobject) {
-      #I want to pass NAs to the design matrix here
-      #First I extract the current system NA action
-      na_action <- options('na.action')
-      #Change the action to na.pass
-      options(na.action='na.pass')
-      #create the design matrix
-      x <- model.matrix(as.formula(fitobject$fit$model.params$formula),new_data)
-      #Resent the system NA action
-      options(na.action=na_action$na.action)
-
-      return(x)
-    },
-    #Post-processing command
-    #This takes the predict object and the modeling object as arguments
-    #And then the parsnip prediction routine passes what this function returns
-    #Here I just want one component of the prediction
-    post = function(x,object) {
-      return(tibble::tibble(x[1]))
-    },
-    func = c(fun="predict"), #Reference to the predict method
-    args = list(
-      #<user argument name> = <value passed to func>
-      #Quoting means the argument will be evaluated at runtime
-      object = quote(object$fit$trained.model),
-      newdata = quote(new_data),
-      type = "numeric"
-    )
-  )
-
   parsnip::set_pred(
     model = "grf_rf",
     eng = "grf",
     mode = "regression",
     type = "numeric",
-    value = grf_rf_pred_info
+    ####################################
+    ## Prediction function
+    ####################################
+    value =  list(
+      #Pre-processing command
+      #As far as I can tell, the return value from this function
+      #is passed as new_data to the predict function below
+      pre = function(new_data,fitobject) {
+        #I want to pass NAs to the design matrix here
+        #First I extract the current system NA action
+        na_action <- options('na.action')
+        #Change the action to na.pass
+        options(na.action='na.pass')
+        #create the design matrix
+        x <- model.matrix(as.formula(fitobject$fit$model.params$formula),new_data)
+        #Resent the system NA action
+        options(na.action=na_action$na.action)
+
+        return(x)
+      },
+      #Post-processing command
+      #This takes the predict object and the modeling object as arguments
+      #And then the parsnip prediction routine passes what this function returns
+      #Here I just want one component of the prediction
+      post = function(x,object) {
+        return(tibble::tibble(x[1]))
+      },
+      func = c(fun="predict"), #Reference to the predict method
+      args = list(
+        #<user argument name> = <value passed to func>
+        #Quoting means the argument will be evaluated at runtime
+        object = quote(object$fit$trained.model),
+        newdata = quote(new_data)
+      )
+    )
   )
 }
 
