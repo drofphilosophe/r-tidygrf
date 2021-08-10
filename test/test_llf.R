@@ -1,6 +1,9 @@
-library(tidyverse)
+library(dplyr)
+library(stringr)
 library(tidymodels)
 library(tidygrf)
+tidymodels_prefer()
+#library(tidyverse)
 
 N = 1000
 full.data <- tibble(e=rnorm(N,0,1))
