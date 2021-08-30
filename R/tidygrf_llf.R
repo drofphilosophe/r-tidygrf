@@ -111,7 +111,7 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
   data.frame(
     list(
       feature = c("(Intercept)",str_split(as.character(formula)[3],r"{ \+ }")[[1]]),
-      varianble.importance = grf::variable_importance(trained.model)[,1]
+      variable.importance = grf::variable_importance(trained.model)[,1]
     )
   ) -> vi
 
