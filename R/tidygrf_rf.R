@@ -113,9 +113,12 @@ rf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) {
   )->trained.model
 
   #Return the model with some additional stuff
-  vi = grf::variable_importance(trained.model)
-  rownames(vi) <- c("(Intercept)",str_split(as.character(formula)[3],r"{ \+ }")[[1]])
-  colnames(vi) <- c("variable_importance")
+  data.frame(
+    list(
+      feature = c("(Intercept)",str_split(as.character(formula)[3],r"{ \+ }")[[1]]),
+      varianble.importance = grf::variable_importance(trained.model)[,1]
+    )
+  ) -> vi
 
   return(
     list(
