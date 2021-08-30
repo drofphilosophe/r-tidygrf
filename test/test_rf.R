@@ -42,7 +42,7 @@ ggplot(data=full.data) +
     y="Acutal"
   )
 
-
+print(llf.fit$fit$model.params$variable_importance)
 
 ##########################
 ## Test Weights
