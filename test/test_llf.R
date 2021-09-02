@@ -21,11 +21,14 @@ for(i in 1:10) {
 }
 
 full.data %>%
+  mutate(k=floor(runif(n=N,0,5))) -> full.data
+
+full.data %>%
   mutate(
     y = e + x1 + x2*x3^2
   ) -> full.data
 
-formula.rf = as.formula("y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10")
+formula.rf = as.formula("y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9 + x10 + factor(k)")
 
 #Build a model
 grf_llf(mode="regression",trees=100) %>%
@@ -58,7 +61,7 @@ full.data <- tibble(e=rnorm(N,0,1))
 
 full.data %>%
   mutate(
-    i=floor(runif(N)*1)
+    i=floor(runif(N)*10)
   ) -> full.data
 
 for(i in 1:5) {

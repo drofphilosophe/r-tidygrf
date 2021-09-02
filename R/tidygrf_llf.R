@@ -110,7 +110,7 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
   #Return the model with some additional stuff
   data.frame(
     list(
-      feature = c("(Intercept)",str_split(as.character(formula)[3],r"{ \+ }")[[1]]),
+      feature = names(data.frame(model.matrix(formula,mf),check.names = FALSE)),
       variable.importance = grf::variable_importance(trained.model)[,1]
     )
   ) -> vi
@@ -121,7 +121,7 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
       model.params=list(
         formula=paste(as.character(formula)[2],"~",as.character(formula)[3]),
         outcome=as.character(formula)[2],
-        features=as.character(formula)[3],
+        features=names(data.frame(model.matrix(formula,mf),check.names = FALSE)),
         variable_importance = vi
       )
     )

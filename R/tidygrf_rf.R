@@ -126,7 +126,7 @@ rf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) {
       model.params=list(
         formula=paste(as.character(formula)[2],"~",as.character(formula)[3]),
         outcome=as.character(formula)[2],
-        features=as.character(formula)[3],
+        features=names(data.frame(model.matrix(formula,mf),check.names = FALSE)),
         variable_importance = vi
       )
     )
