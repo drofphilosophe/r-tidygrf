@@ -61,7 +61,7 @@ full.data <- tibble(e=rnorm(N,0,1))
 
 full.data %>%
   mutate(
-    i=floor(runif(N)*10)
+    i=floor(runif(N)*5)
   ) -> full.data
 
 for(i in 1:5) {
