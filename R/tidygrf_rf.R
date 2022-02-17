@@ -7,7 +7,7 @@
 ##
 ## Remember on updates to run the following:
 ## devtools::document()
-## devtools::install("G:/My Drive/Programming/R/packages/tidygrf")
+## devtools::install_github("drofphilosophe/r-tidygrf")
 #########################################
 
 

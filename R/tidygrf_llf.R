@@ -7,7 +7,7 @@
 ##
 ## Remember on updates to run the following:
 ## devtools::document()
-## devtools::install("G:/My Drive/Programming/R/packages/tidygrf")
+## devtools::install_github("drofphilosophe/r-tidygrf")
 #########################################
 
 #############################
@@ -104,7 +104,8 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
   grf::ll_regression_forest(
     x,y,
     num.trees = trees,
-    min.node.size=min_n
+    min.node.size=min_n,
+    tune.parameters=TRUE
   )->trained.model
 
   #Return the model with some additional stuff
