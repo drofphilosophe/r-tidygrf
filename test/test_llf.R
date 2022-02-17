@@ -1,8 +1,11 @@
 
 ## Remember on updates to run the following:
 if(FALSE) {
+  .rs.restartR()
   devtools::document()
-  devtools::install("C:/Users/archs/Documents/GitHub/R/packages/tidygrf")
+  .rs.restartR()
+  Sys.getenv("USERPROFILE") -> user.home
+  devtools::install(file.path(user.home,"Documents","GitHub","R","r-tidygrf"))
 }
 
 

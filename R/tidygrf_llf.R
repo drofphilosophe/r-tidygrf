@@ -7,6 +7,7 @@
 ##
 ## Remember on updates to run the following:
 ## devtools::document()
+##  Push to githib
 ## devtools::install_github("drofphilosophe/r-tidygrf")
 #########################################
 
@@ -105,7 +106,7 @@ llf_wrapper <- function(formula,data,weights=NULL,trees=2000,mtry=NULL,min_n=5) 
     x,y,
     num.trees = trees,
     min.node.size=min_n,
-    tune.parameters=TRUE
+    tune.parameters=c("alpha","imbalance.penalty")
   )->trained.model
 
   #Return the model with some additional stuff
